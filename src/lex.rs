@@ -60,7 +60,5 @@ pub fn lex(source: &str) -> Vec<Token> {
         tokens.push(create_token(m.as_str()));
     }
 
-    tokens.push(Token::EOF);
-
     return tokens;
 }
