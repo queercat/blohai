@@ -12,6 +12,7 @@ pub enum Token {
     TokenMultiply,
     TokenDivide,
     TokenNull,
+    EOF,
 }
 
 pub fn lex(source: &str) -> Vec<Token> {
@@ -43,7 +44,7 @@ pub fn lex(source: &str) -> Vec<Token> {
         }
 
         if !valid {
-            println!("found -->{}<--", text);
+            println!("-->{}", text);
             panic!("non-valid token found in token stream");
         }
 
@@ -58,6 +59,8 @@ pub fn lex(source: &str) -> Vec<Token> {
     for m in matches {
         tokens.push(create_token(m.as_str()));
     }
+
+    tokens.push(Token::EOF);
 
     return tokens;
 }
