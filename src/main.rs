@@ -50,12 +50,15 @@ fn create_program(value: i32) -> Vec<u8> {
 
             // code section
             0x0a => {
-                section.push(0x07);
+                section.push(0x0a); // size 10
                 section.push(0x01);
-                section.push(0x05);
+                section.push(0x08); // function length
                 section.push(0x00);
-                section.push(0x41);
+                section.push(0x41); // create an i32 const
                 section.push(value);
+                section.push(0x41);
+                section.push(0x0a);
+                section.push(0x6c);
                 section.push(0x0f);
                 section.push(0x0b);
             }
