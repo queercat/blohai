@@ -1,7 +1,7 @@
 use regex::Regex;
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum Token {
     TokenNumber {value: i32},
     TokenVariable,
@@ -19,10 +19,13 @@ pub enum Token {
 pub fn lex(source: &str) -> Vec<Token> {
     /// Takes a string program as an input and turns it into an array of tokens.
     ///
-    /// ```no_run
-    /// lex("(3 + 4)") -> {TokenLParen, TokenNumber {value = 3}, TokenAdd, TokenNumber {value = 4}, TokenRParen}
     /// ```
-    ///
+    /// use blohai::lex;
+    /// use lex::Token;
+    /// let result = lex::lex("(3 + 4)");
+    /// let expected = vec![Token::TokenLParen, Token::TokenNumber {value: 3}, Token::TokenAdd, Token::TokenNumber {value: 4}, Token::TokenRParen];
+    /// assert_eq!(result, expected);
+    /// ```
     
     fn create_token(text: &str) -> Token {
         let mut token : Token = Token::TokenNull;

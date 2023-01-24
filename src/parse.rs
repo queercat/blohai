@@ -6,16 +6,19 @@ pub enum AST {
     Null,
 }
 
+// lookahead
 struct TokenStream {
     tokens: Vec<lex::Token>,
     cursor: usize,
 }
 
-impl TokenStream{
+impl TokenStream {
+    // views ahead but doesn't consume.
     fn peek(&mut self) -> &lex::Token {
         return &self.tokens[self.cursor];
     }
 
+    // advances ahead and consumes.
     fn next(&mut self) -> &lex::Token {
         self.cursor += 1;
         return &self.tokens[self.cursor - 1];
