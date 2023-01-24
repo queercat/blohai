@@ -1,7 +1,6 @@
 mod lex;
 mod parse;
 
-use parse::AST;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io;
@@ -87,24 +86,13 @@ fn create_program(value: i32) -> Vec<u8> {
     return program;
 }
 
-fn main() -> std::io::Result<()> {
-    let mut blowhai_program = String::new();
+fn main() {
+    let mut blohai_program = String::new();
     // io::stdin().read_line(&mut blowhai_program);
 
-    blowhai_program = String::from("(3 + 4) var x; var y;");
+    blohai_program = String::from("var x; var y; var z;");
 
-    let result = parse::parse(&blowhai_program);
+    let result = parse::parse(&blohai_program);
     let mut contents: Vec<u8> = vec![];
-
-    match result {
-        AST::NumberLiteral {value} => {contents = create_program(value);}
-        _ => {panic!("non-valid AST produced, /shrug");}
-    }
-
-    let mut file = File::create("out.wasm")?;
-    for b in contents {
-        file.write(&[b]);
-    }
-    Ok(())
 }
 

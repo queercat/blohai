@@ -1,13 +1,6 @@
 use crate::lex;
 
-#[derive(Debug)]
-pub enum AST {
-    NumberLiteral {value: i32},
-    Null,
-}
-
-// lookahead
-struct TokenStream {
+pub struct TokenStream {
     tokens: Vec<lex::Token>,
     cursor: usize,
 }
@@ -23,41 +16,85 @@ impl TokenStream {
         self.cursor += 1;
         return &self.tokens[self.cursor - 1];
     }
+}
+
+#[derive(Debug)]
+pub enum BinaryOperator {
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+}
+
+#[derive(Debug)]
+pub enum BinaryOperand {
+    Variable {index: u32, name: String}
+}
+
+#[derive(Debug)]
+pub enum Statement {
+    DeclareVariable {index: u32, name: String, value: i32},
+    BinaryOperation {operator: BinaryOperator, lhs: BinaryOperand, rhs: BinaryOperand}
+}
+
+/// Given some expression input returns an expression statement.
+///
+/// (3 + 4) => BinaryOperation {operator: BinarySum, lhs: Number, rhs: Number}
+///
+/// ((x + y) - (3 / 2)) => BinaryOperation {operator: BinarySubtract, lhs: BinaryOperation
+/// {operator: BinarySum, lhs: Variable{x} rhs: Variable {y}}, rhs: Binary Operation {operator:
+/// BinaryDivide, lhs: Number {3}, rhs: Number {4}}
+///
+///  ```
+///  use blohai::parse;
+/// 
+///  ```
+pub fn evaluate_expression(stream: &TokenStream) {
+
+    
 
 }
 
-pub fn parse(source: &str) -> AST {
+pub fn parse(source: &str) -> Vec<Statement> {
     let tokens = lex::lex(source); 
-    
+
+    let mut statements: Vec<Statement> = vec![];
     let mut stream = TokenStream {tokens: tokens, cursor: 0};
-    let mut node : AST = AST::Null;
 
     while stream.cursor < stream.tokens.len() {
         let token = stream.next();
 
-        println!("{:?}", token);
-
         match token {
-            // start expression.
-            lex::Token::TokenLParen => {
-            }
-
-            // handle a var.
             lex::Token::TokenVar => {
+                // TokenStream -> {var, {variable}, operator ...
                 let variable = stream.next();
-                let operation = stream.peek();
+                let mut statement = Statement::DeclareVariable {index: 0, name: String::from(""), value: -1};
 
-                match operation {
-                    lex::Token::TokenSemicolon => {stream.next();}
-                    _ => {println!("---> {:?}", operation); panic!("invalid token found while parsing variable declaration.")} 
+                let mut v_name : String;
+                let mut v_index : u32 = 0;
+
+                match variable {
+                    lex::Token::TokenVariable {name, index} => {v_name = name.to_string(); v_index = *index;},
+                    _ => {panic!("expected Token variable in Token stream but found something else.")}
                 }
-            }
 
-            // handle a number.
-            lex::Token::TokenNumber { value } => {node = AST::NumberLiteral {value: *value}}
-            _ => {panic!("invalid token found in token stream")}
+                let operator = stream.peek();
+                match operator {
+                    // handle variable declaration `var x;`.
+                    lex::Token::TokenSemicolon => {stream.next(); statement = Statement::DeclareVariable {index: v_index, name: v_name, value: 0};},
+                    
+                    _ => {panic!("unsupported operation found in variable declaration")}
+                }
+
+                statements.push(statement);
+            }
+            _ => {panic!("non-valid token found in token stream")}
         }
     }
 
-    return node;
+    for statement in &statements {
+        println!("{:?}", statement);
+    }
+
+    return statements;
 }
