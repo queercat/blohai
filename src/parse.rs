@@ -42,9 +42,15 @@ pub fn parse(source: &str) -> AST {
             lex::Token::TokenLParen => {
             }
 
-            // handle variable definition.
-            lex::Token::TokenVariable => {
-                 
+            // handle a var.
+            lex::Token::TokenVar => {
+                let variable = stream.next();
+                let operation = stream.peek();
+
+                match operation {
+                    lex::Token::TokenSemicolon => {stream.next();}
+                    _ => {println!("---> {:?}", operation); panic!("invalid token found while parsing variable declaration.")} 
+                }
             }
 
             // handle a number.
