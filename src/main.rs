@@ -89,7 +89,9 @@ fn create_program(value: i32) -> Vec<u8> {
 
 fn main() -> std::io::Result<()> {
     let mut blowhai_program = String::new();
-    io::stdin().read_line(&mut blowhai_program);
+    // io::stdin().read_line(&mut blowhai_program);
+
+    blowhai_program = String::from("var x = 1");
 
     let result = parse::parse(&blowhai_program);
     let mut contents: Vec<u8> = vec![];

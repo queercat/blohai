@@ -1,9 +1,10 @@
 use regex::Regex;
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub enum Token {
-    TokenString {value: String},
     TokenNumber {value: i32},
+    TokenVariable,
     TokenEquals,
     TokenLParen,
     TokenRParen,
@@ -22,7 +23,7 @@ pub fn lex(source: &str) -> Vec<Token> {
     /// lex("(3 + 4)") -> {TokenLParen, TokenNumber {value = 3}, TokenAdd, TokenNumber {value = 4}, TokenRParen}
     /// ```
     ///
-
+    
     fn create_token(text: &str) -> Token {
         let mut token : Token = Token::TokenNull;
         let mut valid = false;
@@ -40,11 +41,12 @@ pub fn lex(source: &str) -> Vec<Token> {
             "/" => {valid = true; token = Token::TokenDivide}
             "*" => {valid = true; token = Token::TokenMultiply}
             "=" => {valid = true; token = Token::TokenEquals}
+            "var" => {valid = true; token = Token::TokenVariable}
             _ => {} 
         }
 
         if !valid {
-            println!("-->{}", text);
+            println!("--> {}", text);
             panic!("non-valid token found in token stream");
         }
 
@@ -52,7 +54,7 @@ pub fn lex(source: &str) -> Vec<Token> {
     }
 
     let mut tokens: Vec<Token> = Vec::new();
-    let regex_text = r"[()+-/\\]|\d+|\w+";
+    let regex_text = r"[=()+-/\\]|\d+|\w+";
     let token_regex = Regex::new(regex_text).unwrap();
     let matches = token_regex.find_iter(source);
 

@@ -23,21 +23,28 @@ impl TokenStream{
 
 }
 
-///https://stackoverflow.com/questions/21747136/how-do-i-print-in-rust-the-type-of-a-variable
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>());
-}
-
 pub fn parse(source: &str) -> AST {
     let tokens = lex::lex(source); 
+    
     let mut stream = TokenStream {tokens: tokens, cursor: 0};
-
     let mut node : AST = AST::Null;
 
     while stream.cursor < stream.tokens.len() {
         let token = stream.next();
 
+        println!("{:?}", token);
+
         match token {
+            // start expression.
+            lex::Token::TokenLParen => {
+            }
+
+            // handle variable definition.
+            lex::Token::TokenVariable => {
+                 
+            }
+
+            // handle a number.
             lex::Token::TokenNumber { value } => {node = AST::NumberLiteral {value: *value}}
             _ => {panic!("invalid token found in token stream")}
         }
