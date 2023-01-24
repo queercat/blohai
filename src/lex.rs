@@ -37,7 +37,7 @@ pub fn create_symbol_table(source: &str) -> HashMap<&str, u32> {
     let symbol_regex = Regex::new(symbol_regex_text).unwrap();
     let matches = symbol_regex.find_iter(source); 
 
-    // guarenteed at least 2 per match due to regex.
+    // guaranteed at least 2 per match due to regex.
     for m in matches {
         let splits: Vec<&str> = m.as_str().split(" ").collect();
         let symbol = splits[1];
