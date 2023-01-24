@@ -15,4 +15,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Run Tests
-    - run: cargo test --verbose
+      run: cargo test --verbose
